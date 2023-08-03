@@ -1,12 +1,14 @@
 import os
 
 from dotenv import load_dotenv
-from telegram.ext import CommandHandler, Updater
+from telegram.ext import CommandHandler, Filters, Updater
 
 from db import get_ids, insert_into_db, look_for_me, update_username
 
 
 load_dotenv()
+
+CHAT_ID = int(os.getenv('OWNER_CHAT_ID'))
 
 
 updater = Updater(token=os.getenv('TOKEN'))
@@ -66,11 +68,12 @@ def reset_username(update, context):
     send_message(chat.id, context, message)
 
 
-def deadlines(update, context):
-    usernames = update.message.text.split(' ')
+def deadlines(update, context, filters=Filters.chat(CHAT_ID)):
+    usernames, deadline, card_name = update.message.text.split('|')
+    usernames = usernames.split(' ')
     usernames.pop(0)
     data = get_ids(usernames)
-    text = 'deadline'
+    text = f'{deadline} истекает срок {card_name}'
     for id in data:
         send_message(id, context, text)
 
