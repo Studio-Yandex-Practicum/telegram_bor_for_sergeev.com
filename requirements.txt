@@ -1,0 +1,2 @@
+python-telegram-bot==13.7
+pyrogram==2.0.106

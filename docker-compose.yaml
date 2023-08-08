@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  redirecter:
+    build:
+      context: ./redirecter/
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ./.env
+    command:
+      sh -c "python telegram_client.py"
+
+  bot:
+    build:
+      context: ./bot/
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ./.env
+    command:
+      sh -c "python db.py &&
+             python telegram_bot.py"
